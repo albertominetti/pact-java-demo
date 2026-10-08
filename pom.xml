@@ -31,16 +31,16 @@
   </modules>
 
   <properties>
-    <java.version>21</java.version>
-    <maven.compiler.release>21</maven.compiler.release>
-    <pact-jvm.version>4.6.21</pact-jvm.version>
+    <java.version>25</java.version>
+    <maven.compiler.release>25</maven.compiler.release>
+    <pact-jvm.version>4.7.5</pact-jvm.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
   <dependencyManagement>
     <dependencies>
-      <!-- Pact JVM 4.6.x: every module must use the same version -->
+      <!-- Pact JVM 4.7.x: every module must use the same version -->
       <dependency>
         <groupId>au.com.dius.pact</groupId>
         <artifactId>consumer</artifactId>

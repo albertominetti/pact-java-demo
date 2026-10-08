@@ -47,7 +47,7 @@
       <!--
         After the tests (phase 'test', which runs after surefire) it copies the
         generated pacts into the shared folder <root>/pacts, from which the provider
-        reads them with a single @PactFolder("../pacts"): in pact-jvm 4.6.x the
+        reads them with a single @PactFolder("../pacts"): in pact-jvm 4.7.x the
         @PactFolder annotation is not repeatable.
       -->
       <plugin>

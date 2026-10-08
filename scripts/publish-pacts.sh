@@ -32,7 +32,7 @@ ls -1 pacts/*.json
 echo "Publishing to $PACT_BROKER_BASE_URL (version=$PACT_CONSUMER_VERSION, tag=$PACT_CONSUMER_TAG)..."
 # -N (non-recursive): the goal must only run on the parent project,
 # where the pacts/ folder lives.
-mvn -q -N "au.com.dius.pact.provider:maven:4.6.21:publish" \
+mvn -q -N "au.com.dius.pact.provider:maven:4.7.5:publish" \
   -Dpact.pactDirectory=pacts \
   -Dpact.broker.url="$PACT_BROKER_BASE_URL" \
   -Dpact.broker.username="$PACT_BROKER_USERNAME" \

@@ -1,7 +1,7 @@
-# pact-contract-demo
+# pact-java-demo
 
 A didactic demo of **consumer-driven contract testing** with
-[Pact](https://docs.pact.io/) (**pact-jvm 4.6.x**), between a Spring Boot
+[Pact](https://docs.pact.io/) (**pact-jvm 4.7.5**), between a Spring Boot
 **producer** and **two consumers** that consume *different subsets* of the same
 contract, with a **Pact Broker** as the contract registry.
 
@@ -16,6 +16,32 @@ to `main` through a pull request; the `main` branch is intentionally kept empty.
 > built and tested with one command. In a real-world setup you would typically keep
 > the services in separate repositories with separate pipelines: the *contract*,
 > not the build layout, is the point of this demo.
+
+---
+
+## Versions & compatibility
+
+| Component | Version | Notes |
+|---|---|---|
+| JDK / bytecode (`maven.compiler.release`) | **25** | Spring Boot 3.5.5+ is Java 25 ready |
+| Spring Boot | **3.5.16** | last release of the 3.5.x line |
+| pact-jvm | **4.7.5** | latest pact-jvm release |
+| JUnit Jupiter | **5.12.2** | shared by both stacks (managed by Spring Boot) |
+| Spring Framework | **6.2.19** | managed by Spring Boot 3.5.16 |
+
+**Why not Spring Boot 4.x?** The latest Spring Boot line (4.1.1) ships
+**JUnit Jupiter 6.0.3** and **Spring Framework 7.0.9**, while the latest
+pact-jvm (4.7.5) still builds on **JUnit Jupiter 5.12.2** and the **Spring 6**
+provider modules (`junit5spring` / `spring6`). The two stacks are therefore
+**incompatible**: pact's JUnit 5 `TestTemplate` extension providers and its
+Spring 6 test-context support cannot run on JUnit Jupiter 6 + Spring Framework 7,
+so **Spring Boot 4.x + pact-jvm 4.7.5 does not work today** (pact has no release
+for that stack yet).
+
+So `Spring Boot 3.5.16 + pact-jvm 4.7.5` is the **most recent mutually
+compatible set**: both resolve to **JUnit Jupiter 5.12.2** (and Spring Framework
+6.2.19), while still running on **JDK 25**. If/when pact-jvm ships a JUnit 6 /
+Spring 7 based release, moving to Spring Boot 4.x becomes an option.
 
 ---
 
@@ -143,12 +169,12 @@ pact-contract-demo/
         └── PactVerificationMode.java                # folder/broker gate
 ```
 
-**Stack**: Java 21 (release 21 bytecode, buildable on JDK 25), Maven 3.9,
-Spring Boot **3.5.x**, pact-jvm **4.6.21**, JUnit 5, Docker (optional).
+**Stack**: Java 25 (`maven.compiler.release=25`, built on JDK 25), Maven 3.9,
+Spring Boot **3.5.16**, pact-jvm **4.7.5**, JUnit Jupiter **5.12.2**, Docker (optional).
 
-### Why `<root>/pacts` (a note on pact-jvm 4.6.x)
+### Why `<root>/pacts` (a note on pact-jvm 4.7.x)
 
-In pact-jvm 4.6.x the `@PactFolder` annotation is **not repeatable**: a verification
+In pact-jvm 4.7.x the `@PactFolder` annotation is **not repeatable**: a verification
 class can point at **one single** folder. Each consumer therefore writes its pact to
 its own `target/pacts` (a demo criterion) and the build copies it into the **shared**
 folder `<root>/pacts` (a `maven-resources-plugin` execution bound to the `test`
@@ -246,7 +272,7 @@ docker compose up -d      # or: make broker-up / scripts/broker-up.sh
 > criterion is considered degraded (the YAML file is still validated at build time).
 
 Publishing (`scripts/publish-pacts.sh`) uses the maven plugin
-`au.com.dius.pact.provider:maven:4.6.21:publish` with:
+`au.com.dius.pact.provider:maven:4.7.5:publish` with:
 
 - `-Dpact.pactDirectory=pacts` (the shared folder)
 - `-Dpact.broker.url/username/password` (from the environment)

@@ -26,7 +26,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  *   bring the in-memory repository back to the state the contract expects.
  *
  * The concrete subclasses add the pact source (a single @PactFolder per class:
- * in pact-jvm 4.6.x the annotation is not repeatable) and the folder/broker mode
+ * in pact-jvm 4.7.x the annotation is not repeatable) and the folder/broker mode
  * gate.
  */
 @SpringBootTest(classes = InstrumentServiceApplication.class,

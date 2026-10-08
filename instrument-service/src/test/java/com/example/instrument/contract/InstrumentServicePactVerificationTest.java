@@ -10,7 +10,7 @@ import org.junit.jupiter.api.condition.EnabledIf;
  *
  * The two consumers write their pacts into target/pacts and the build copies
  * them into <root>/pacts: here ONE single @PactFolder is enough (not repeatable
- * in pact-jvm 4.6.x).
+ * in pact-jvm 4.7.x).
  *
  * The path comes from the "pact.folder" system property set by the surefire
  * plugin (an absolute path); the "../pacts" default covers IDE usage.
