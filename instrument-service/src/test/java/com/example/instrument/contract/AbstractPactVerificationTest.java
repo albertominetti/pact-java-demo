@@ -3,7 +3,7 @@ package com.example.instrument.contract;
 import au.com.dius.pact.provider.junit5.HttpTestTarget;
 import au.com.dius.pact.provider.junit5.PactVerificationContext;
 import au.com.dius.pact.provider.junitsupport.State;
-import au.com.dius.pact.provider.spring.junit5.PactVerificationSpringProvider;
+import au.com.dius.pact.provider.spring.spring7.PactVerificationSpring7Provider;
 import com.example.instrument.InstrumentServiceApplication;
 import com.example.instrument.repository.InstrumentRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,8 +20,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  * - @SpringBootTest with WebEnvironment.RANDOM_PORT: starts the real application
  *   on a free port; the Pact verifier talks to it over real HTTP, exercising the
  *   whole stack (controller, JSON serialization, ...).
- * - PactVerificationSpringProvider: the pact-jvm extension that hooks into the
- *   Spring context and generates one test per interaction of the pacts found.
+ * - PactVerificationSpring7Provider: the pact-jvm extension (module
+ *   au.com.dius.pact.provider:spring7, for Spring 7 / Spring Boot 4)
+ *   that hooks into the Spring context and generates one test per interaction of
+ *   the pacts found.
  * - @State: the provider states declared by the consumers act as seeds: they
  *   bring the in-memory repository back to the state the contract expects.
  *
@@ -47,7 +49,7 @@ abstract class AbstractPactVerificationTest {
     }
 
     @TestTemplate
-    @ExtendWith(PactVerificationSpringProvider.class)
+    @ExtendWith(PactVerificationSpring7Provider.class)
     void verifyPactInteraction(PactVerificationContext context) {
         context.verifyInteraction();
     }

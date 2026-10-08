@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.5.16</version>
+    <version>4.1.1</version>
     <relativePath/>
   </parent>
 
@@ -61,9 +61,11 @@
         <artifactId>junit5</artifactId>
         <version>${pact-jvm.version}</version>
       </dependency>
+      <!-- Pact provider for Spring 7 / Spring Boot 4 (replaces the
+           junit5spring/spring6 modules used with Spring Boot 3.5.x) -->
       <dependency>
         <groupId>au.com.dius.pact.provider</groupId>
-        <artifactId>junit5spring</artifactId>
+        <artifactId>spring7</artifactId>
         <version>${pact-jvm.version}</version>
       </dependency>
     </dependencies>

@@ -23,25 +23,32 @@ to `main` through a pull request; the `main` branch is intentionally kept empty.
 
 | Component | Version | Notes |
 |---|---|---|
-| JDK / bytecode (`maven.compiler.release`) | **25** | Spring Boot 3.5.5+ is Java 25 ready |
-| Spring Boot | **3.5.16** | last release of the 3.5.x line |
+| JDK / bytecode (`maven.compiler.release`) | **25** | Spring Boot 4.x is Java 25 ready |
+| Spring Boot | **4.1.1** | latest stable release (`spring-boot-starter-parent`) |
 | pact-jvm | **4.7.5** | latest pact-jvm release |
-| JUnit Jupiter | **5.12.2** | shared by both stacks (managed by Spring Boot) |
-| Spring Framework | **6.2.19** | managed by Spring Boot 3.5.16 |
+| pact provider module | **`au.com.dius.pact.provider:spring7`** | dedicated "Spring7 / Spring Boot 4" provider support (`PactVerificationSpring7Provider`) |
+| JUnit Jupiter / Platform | **6.0.3** | Spring Boot 4 default (required by Spring Framework 7.0.9); no pin needed |
+| Spring Framework | **7.0.9** | managed by Spring Boot 4.1.1 |
 
-**Why not Spring Boot 4.x?** The latest Spring Boot line (4.1.1) ships
-**JUnit Jupiter 6.0.3** and **Spring Framework 7.0.9**, while the latest
-pact-jvm (4.7.5) still builds on **JUnit Jupiter 5.12.2** and the **Spring 6**
-provider modules (`junit5spring` / `spring6`). The two stacks are therefore
-**incompatible**: pact's JUnit 5 `TestTemplate` extension providers and its
-Spring 6 test-context support cannot run on JUnit Jupiter 6 + Spring Framework 7,
-so **Spring Boot 4.x + pact-jvm 4.7.5 does not work today** (pact has no release
-for that stack yet).
+**About the JUnit version.** Spring Framework 7.0.9 (shipped by Spring Boot
+4.1.1) is built against JUnit Jupiter **6.0.3**: its `SpringExtension` uses the
+JUnit 6 `ExtensionContext.Store.computeIfAbsent(...)` API, which **does not
+exist in JUnit 5** (where the method is still named `getOrComputeIfAbsent`).
+Pinning JUnit Jupiter 5.12.2 — tempting because pact-jvm's JUnit modules are
+called "junit5" — therefore breaks `@SpringBootTest` on Boot 4 with a
+`NoSuchMethodError`. In practice pact-jvm 4.7.5 runs fine on the **JUnit 6.0.3**
+runtime: the pact JUnit 5 modules and the `spring7` provider module work
+unmodified, so the project simply keeps the Spring Boot 4 default.
 
-So `Spring Boot 3.5.16 + pact-jvm 4.7.5` is the **most recent mutually
-compatible set**: both resolve to **JUnit Jupiter 5.12.2** (and Spring Framework
-6.2.19), while still running on **JDK 25**. If/when pact-jvm ships a JUnit 6 /
-Spring 7 based release, moving to Spring Boot 4.x becomes an option.
+This makes **Spring Boot 4.1.1 + pact-jvm 4.7.5** the **most recent compatible
+set**: latest Spring Boot, latest Pact, both on **JDK 25**, running
+JUnit Jupiter 6.0.3 and Spring Framework 7.0.9 (verified by the full build
+including consumer tests and provider verification).
+
+> Fallback reference: `Spring Boot 3.5.16 + pact-jvm 4.7.5` (Spring Framework
+> 6.2.19, JUnit Jupiter 5.12.2 natively, pact provider module `junit5spring`)
+> was the previous configuration of this demo and remains a working, Spring-6 /
+> JUnit-5 based alternative.
 
 ---
 
@@ -170,7 +177,8 @@ pact-contract-demo/
 ```
 
 **Stack**: Java 25 (`maven.compiler.release=25`, built on JDK 25), Maven 3.9,
-Spring Boot **3.5.16**, pact-jvm **4.7.5**, JUnit Jupiter **5.12.2**, Docker (optional).
+Spring Boot **4.1.1**, pact-jvm **4.7.5** (provider module **`spring7`** for
+Spring 7 / Boot 4), JUnit Jupiter **6.0.3**, Docker (optional).
 
 ### Why `<root>/pacts` (a note on pact-jvm 4.7.x)
 

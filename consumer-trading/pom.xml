@@ -29,7 +29,7 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
     </dependency>
 
-    <!-- Tests: JUnit 5 + AssertJ + the Pact consumer DSL -->
+    <!-- Tests: JUnit + AssertJ + the Pact consumer DSL -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>

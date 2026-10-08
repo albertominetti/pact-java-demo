@@ -27,8 +27,8 @@
     </dependency>
 
     <!-- Pact provider verification: annotations (@Provider, @State, @PactFolder,
-         @PactBroker), the JUnit 5 runner and the Spring support
-         (PactVerificationSpringProvider) -->
+         @PactBroker), the pact JUnit runner (module junit5) and the Spring 7 /
+         Spring Boot 4 support (PactVerificationSpring7Provider) -->
     <dependency>
       <groupId>au.com.dius.pact</groupId>
       <artifactId>provider</artifactId>
@@ -41,7 +41,7 @@
     </dependency>
     <dependency>
       <groupId>au.com.dius.pact.provider</groupId>
-      <artifactId>junit5spring</artifactId>
+      <artifactId>spring7</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
