@@ -1,0 +1,42 @@
+# Pact Broker (contract registry) + Postgres.
+#
+# Start:   docker compose up -d      (or: make broker-up / scripts/broker-up.sh)
+# URL:     http://localhost:9292     (basic auth: pact / pact)
+services:
+  postgres:
+    image: postgres:16
+    container_name: pact-demo-postgres
+    environment:
+      POSTGRES_USER: pact
+      POSTGRES_PASSWORD: pact
+      POSTGRES_DB: pactbroker
+    volumes:
+      - pact-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pact -d pactbroker"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  pact-broker:
+    image: pactfoundation/pact-broker:latest
+    container_name: pact-demo-broker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "9292:80"
+    environment:
+      # Database
+      PACT_BROKER_DATABASE_ADAPTER: postgres
+      PACT_BROKER_DATABASE_HOSTNAME: postgres
+      PACT_BROKER_DATABASE_NAME: pactbroker
+      PACT_BROKER_DATABASE_USERNAME: pact
+      PACT_BROKER_DATABASE_PASSWORD: pact
+      # Basic auth on the comparisons (public read: convenient for the demo)
+      PACT_BROKER_BASIC_AUTH_USERNAME: pact
+      PACT_BROKER_BASIC_AUTH_PASSWORD: pact
+      PACT_BROKER_ALLOW_PUBLIC_READ: "true"
+
+volumes:
+  pact-pgdata:
