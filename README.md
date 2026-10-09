@@ -5,8 +5,6 @@ A didactic demo of **consumer-driven contract testing** with
 **producer** and **two consumers** that consume *different subsets* of the same
 contract, with a **Pact Broker** as the contract registry.
 
-The project is hosted on GitHub at <https://github.com/albertominetti/pact-java-demo>.
-
 > **Design note (please read):** this project is **voluntarily simple**: it is a
 > didactic demo, not a production template. In particular, it
 > **uses Maven multi-module for simplicity**, so that the producer, the two
@@ -156,7 +154,7 @@ pact-contract-demo/
 ├── scripts/
 │   ├── publish-pacts.sh       # publishes the pacts to the broker (maven plugin)
 │   ├── verify-provider.sh     # verification: folder (default) or --broker
-│   ├── broker-up.sh           # docker compose up -d, or docker run equivalents
+│   ├── broker-up.sh           # docker compose up -d
 │   ├── broker-down.sh         # stops the broker
 │   └── demo-break.sh          # demonstrative breaking change (restores itself)
 ├── consumer-trading/          # CONSUMER 1 - trading dashboard (live prices)
@@ -208,7 +206,7 @@ mvn -q clean install -DskipTests
 mvn -q -pl consumer-trading,consumer-settlement test
 
 # 3) (OPTIONAL, requires Docker) Pact Broker + publish the pacts
-docker compose up -d                # or: make broker-up  (uses docker run if the plugin is missing)
+docker compose up -d                # or: make broker-up
 ./scripts/publish-pacts.sh          # or: make publish
 
 # 4) provider verification in folder mode (default, no broker)
@@ -269,13 +267,6 @@ docker compose up -d      # or: make broker-up / scripts/broker-up.sh
 `docker-compose.yml` defines `postgres:16` + `pactfoundation/pact-broker`
 (on 9292) with `PACT_BROKER_BASIC_AUTH_USERNAME/PASSWORD=pact` and
 `PACT_BROKER_ALLOW_PUBLIC_READ=true`.
-
-> **Environment note**: in this container the `docker compose` CLI plugin may be
-> missing (and the Docker daemon may not be running): in that case
-> `scripts/broker-up.sh`/`broker-down.sh` start and stop the same services with
-> equivalent `docker run` commands (network `pact-demo-net`, containers
-> `pact-demo-postgres` and `pact-demo-broker`), and the `docker compose config`
-> criterion is considered degraded (the YAML file is still validated at build time).
 
 Publishing (`scripts/publish-pacts.sh`) uses the maven plugin
 `au.com.dius.pact.provider:maven:4.7.5:publish` with:
@@ -344,8 +335,7 @@ manually: apply the change, run `make verify`, watch it fail, revert the change.
    `consumer-settlement/target/pacts/`: written by `@PactDirectory("target/pacts")`.
 3. `mvn -q -pl instrument-service test` → **BUILD SUCCESS** (default folder mode,
    no broker required).
-4. `docker-compose.yml` syntactically valid (YAML); `docker compose config` degraded
-   if the CLI plugin is missing (see the note in §6).
+4. `docker-compose.yml` syntactically valid (YAML); validated with `docker compose config`.
 5. README with architecture, ASCII diagram, execution sequence and the concept of
    pact/contract testing (this file).
 6. Makefile: `make build`, `make consumer-tests`, `make verify`, ...
