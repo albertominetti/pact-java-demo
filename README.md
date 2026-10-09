@@ -6,8 +6,6 @@ A didactic demo of **consumer-driven contract testing** with
 contract, with a **Pact Broker** as the contract registry.
 
 The project is hosted on GitHub at <https://github.com/albertominetti/pact-java-demo>.
-All project files live on the `feature/pact-java-demo` branch, which is proposed
-to `main` through a pull request; the `main` branch is intentionally kept empty.
 
 > **Design note (please read):** this project is **voluntarily simple**: it is a
 > didactic demo, not a production template. In particular, it
