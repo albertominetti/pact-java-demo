@@ -14,6 +14,44 @@ contract, with a **Pact Broker** as the contract registry.
 > not the build layout, is the point of this demo.
 
 ---
+## How Pact works (summary)
+
+> Summarised from [How Pact contract testing works](https://pactflow.io/how-pact-works/)
+> by PactFlow. Text below is a short paraphrase; animations and full text live on
+> their page. All images are linked, not copied.
+
+**1. The problem with integration tests.** Before deploying, you need confidence
+that services work together. Classic end-to-end tests boot the real applications
+together. They give confidence to release, but are slow, fragile, dependency-heavy
+and expensive to maintain.
+See [slide 1](https://pactflow.io/assets/img/pactflow/how-pact-works/slide_1.gif).
+
+**2. Isolated tests alone are not enough.** Testing each side against a hand-written
+stub/simulator runs fast and stays stable, but nothing guarantees the simulators
+behave like the real apps — so they give no release confidence.
+See [slide 2](https://pactflow.io/assets/img/pactflow/how-pact-works/slide_2.gif).
+
+**3. Consumer side: mock provider records the contract.** The consumer test runs
+against a Pact mock provider. Each request + expected response is recorded into a
+contract (pact) JSON file.
+See [slide 3](https://pactflow.io/assets/img/pactflow/how-pact-works/slide_3.gif).
+
+**4. Provider side: simulated consumer replays the contract.** The provider test
+replays each recorded request against the real provider and compares actual vs
+expected responses. A match proves the simulators behave like the real apps, so the
+two real apps should communicate correctly in production.
+See [slide 4](https://pactflow.io/assets/img/pactflow/how-pact-works/slide_4.gif).
+
+**5. Result.** Tests that run independently, give fast feedback, stay stable, are
+easy to maintain — *and* give confidence to release.
+See [slide 5](https://pactflow.io/assets/img/pactflow/how-pact-works/slide_5.gif).
+
+**6. Sharing contracts and CI/CD.** The [Pact Broker](https://docs.pact.io/getting_started/sharing_pacts)
+(nowadays also PactFlow as hosted option) shares contracts across teams, manages
+versions/branches/environments, and orchestrates builds (`can-i-deploy`).
+See [slide 6](https://pactflow.io/assets/img/pactflow/how-pact-works/slide_6.png).
+
+---
 
 ## Versions & compatibility
 
