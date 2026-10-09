@@ -18,87 +18,38 @@ contract, with a **Pact Broker** as the contract registry.
 
 > Summarised from [How Pact contract testing works](https://pactflow.io/how-pact-works/)
 > by PactFlow. Text below is a short paraphrase; animations and full text live on
-> their page. Diagrams below are original (static) illustrations of the same ideas —
-> they cannot show motion the way the source animations do.
+> their page.
 
 **1. The problem with integration tests.** Before deploying, you need confidence
 that services work together. Classic end-to-end tests boot the real applications
 together. They give confidence to release, but are slow, fragile, dependency-heavy
 and expensive to maintain.
-See [slide 1](https://pactflow.io/assets/img/pactflow/how-pact-works/slide_1.gif).
-
-```mermaid
-flowchart LR
-    CT["consumer build<br/>real consumer"] <-->|"real HTTP<br/>both apps live"| PT["provider build<br/>real provider"]
-```
+See [slide 1](https://pactflow.io/how-pact-works/#slide-1).
 
 **2. Isolated tests alone are not enough.** Testing each side against a hand-written
 stub/simulator runs fast and stays stable, but nothing guarantees the simulators
 behave like the real apps — so they give no release confidence.
-See [slide 2](https://pactflow.io/assets/img/pactflow/how-pact-works/slide_2.gif).
-
-```mermaid
-flowchart TB
-    subgraph ConsumerSide["consumer build (fast, stable)"]
-        C["real consumer"] <--> S1["hand-written stub<br/>of provider"]
-    end
-    subgraph ProviderSide["provider build (fast, stable)"]
-        P["real provider"] <--> S2["hand-written stub<br/>of consumer"]
-    end
-    ConsumerSide ~~~|"no link between<br/>the two builds"| ProviderSide
-```
+See [slide 2](https://pactflow.io/how-pact-works/#slide-2).
 
 **3. Consumer side: mock provider records the contract.** The consumer test runs
 against a Pact mock provider. Each request + expected response is recorded into a
 contract (pact) JSON file.
-See [slide 3](https://pactflow.io/assets/img/pactflow/how-pact-works/slide_3.gif).
-
-```mermaid
-flowchart LR
-    C["consumer test<br/>real consumer code"] -->|"request +<br/>expected response"| M["Pact mock provider"]
-    M -->|"records"| F[("pact file<br/>(contract JSON)")]
-```
+See [slide 3](https://pactflow.io/how-pact-works/#slide-3).
 
 **4. Provider side: simulated consumer replays the contract.** The provider test
 replays each recorded request against the real provider and compares actual vs
 expected responses. A match proves the simulators behave like the real apps, so the
 two real apps should communicate correctly in production.
-See [slide 4](https://pactflow.io/assets/img/pactflow/how-pact-works/slide_4.gif).
-
-```mermaid
-flowchart LR
-    F[("pact file<br/>(contract JSON)")] -->|"replay each<br/>interaction"| V["Pact verifier<br/>(simulated consumer)"]
-    V -->|"real HTTP"| P["real provider"]
-    P -->|"actual response"| V
-    V -->|"compare<br/>expected vs actual"| R{"match?"}
-```
+See [slide 4](https://pactflow.io/how-pact-works/#slide-4).
 
 **5. Result.** Tests that run independently, give fast feedback, stay stable, are
 easy to maintain — *and* give confidence to release.
-See [slide 5](https://pactflow.io/assets/img/pactflow/how-pact-works/slide_5.gif).
-
-```mermaid
-flowchart LR
-    C["consumer<br/>(mock verified)"] -->|"contract"| F[("pact")]
-    F -->|"verified"| P["provider<br/>(real app)"]
-    C e1@"✅ independent" --- P
-    C e2@"✅ fast / stable" --- P
-    C e3@"✅ release confidence" --- P
-```
+See [slide 5](https://pactflow.io/how-pact-works/#slide-5).
 
 **6. Sharing contracts and CI/CD.** The [Pact Broker](https://docs.pact.io/getting_started/sharing_pacts)
 (nowadays also PactFlow as hosted option) shares contracts across teams, manages
 versions/branches/environments, and orchestrates builds (`can-i-deploy`).
-See [slide 6](https://pactflow.io/assets/img/pactflow/how-pact-works/slide_6.png).
-
-```mermaid
-flowchart TB
-    C1["consumer A<br/>publishes pact"] --> B[("Pact Broker<br/>versions + tags")]
-    C2["consumer B<br/>publishes pact"] --> B
-    B -->|"pull pacts<br/>for verification"| P["provider build"]
-    P -->|"publish<br/>verification result"| B
-    B -->|"can-i-deploy?"| D["deploy gate"]
-```
+See [slide 6](https://pactflow.io/how-pact-works/#slide-6).
 
 ---
 
