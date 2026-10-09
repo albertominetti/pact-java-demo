@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.example.pact</groupId>
+    <artifactId>pact-contract-demo</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+  <artifactId>consumer-settlement</artifactId>
+  <name>consumer-settlement</name>
+  <description>Consumer 2: settlement/back-office - wants the master data and the maturity date</description>
+
+  <dependencies>
+    <!-- The REST client uses RestClient (spring-web) -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+    </dependency>
+
+    <!-- Tests: JUnit + AssertJ + the Pact consumer DSL -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>au.com.dius.pact.consumer</groupId>
+      <artifactId>junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!--
+        After the tests (phase 'test', which runs after surefire) it copies the
+        generated pacts into the shared folder <root>/pacts, from which the provider
+        reads them with a single @PactFolder("../pacts"): in pact-jvm 4.7.x the
+        @PactFolder annotation is not repeatable.
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <id>copy-pact-to-shared-folder</id>
+            <phase>test</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.basedir}/../pacts</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/target/pacts</directory>
+                  <includes>
+                    <include>*.json</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,7 @@
+target/
+pacts/
+*.bak
+*.iml
+.idea/
+.vscode/
+.DS_Store
